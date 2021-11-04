@@ -20,9 +20,9 @@ on:
         default: 'false'
 
 env:
-  REPO_URL: https://github.com/coolsnowwolf/lede.git
+  REPO_URL: https://github.com/Z-Prion/openwrt-origin.git
   # https://github.com/Z-Prion/lede
-  REPO_BRANCH: 20200915
+  REPO_BRANCH: openwrt-19.07
   # master
   FEEDS_CONF: feeds.conf.default
   CONFIG_FILE: .config
@@ -62,23 +62,15 @@ jobs:
         git clone $REPO_URL -b $REPO_BRANCH openwrt
         # git clone https://github.com/KyleRicardo/MentoHUST-OpenWrt-ipk.git openwrt/package/mentohust
         # git clone https://github.com/BoringCat/luci-app-mentohust.git openwrt/package/luci-app-mentohust
-        # 
-        # git clone https://gitee.com/zprion/pcre.git openwrt/package/libs/pcre
+        rm -rf openwrt/target/linux/ar71xx/base-files/etc/board.d/02_network
+        rm -rf openwrt/target/linux/ar71xx/files/arch/mips/ath79/mach-tl-wr802n.c
+        rm -rf openwrt/package/base-files/files/etc/board.d/99-default_network
         rm -rf openwrt/target/linux/ar71xx/image/tiny-tp-link.mk
-        git clone https://gitee.com/zprion/tiny.git openwrt/test
+        git clone https://github.com/Z-Prion/openwrt-19.07-file.git openwrt/test
         cp openwrt/test/tiny-tp-link.mk openwrt/target/linux/ar71xx/image
-        # rm -rf openwrt/package/network/utils/iproute2/Makefile
-        # rm -rf openwrt/include/target.mk
-        # rm -rf openwrt/package/libs/nettle              
-        # git clone https://gitee.com/zprion/nettle.git openwrt/package/libs/nettle
-        # git clone https://gitee.com/zprion/libcap.git openwrt/package/network/utils/iproute2/test
-        # mv openwrt/package/network/utils/iproute2/test/Makefile  openwrt/package/network/utils/iproute2
-        # git clone https://gitee.com/zprion/lede-20200416.git openwrt/target/linux/ar71xx/image/test
-        # git clone https://gitee.com/zprion/git-libcap.git openwrt/package/libs/libcap
-        # mv openwrt/package/libs/libcap/target.mk openwrt/include
-        # cd openwrt/target/linux/ar71xx/image/test
-        # mv tiny-tp-link.mk ..
-        # cd
+        cp openwrt/test/02_network openwrt/target/linux/ar71xx/base-files/etc/board.d
+        cp openwrt/test/mach-tl-wr802n.c openwrt/target/linux/ar71xx/files/arch/mips/ath79
+        cp openwrt/test/99-default_network openwrt/package/base-files/files/etc/board.d
         ln -sf /workdir/openwrt $GITHUB_WORKSPACE/openwrt
         
     - name: Load custom feeds
